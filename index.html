@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>بطاقة المعايدة</title>
+  <title>Greeting Card</title>
 
   <style>
     body {
@@ -15,7 +15,7 @@
     }
 
     .container {
-      max-width: 700px;
+      max-width: 900px;
       margin: 40px auto;
       background: #ffffff;
       padding: 30px;
@@ -24,20 +24,24 @@
     }
 
     h1 {
-      margin-bottom: 10px;
       color: #7a4f18;
     }
 
-    p {
-      color: #555;
-      font-size: 17px;
+    .language {
+      margin-bottom: 20px;
+      font-size: 18px;
     }
 
-    input {
+    .language label {
+      margin: 0 10px;
+      cursor: pointer;
+    }
+
+    input[type="text"] {
       width: 90%;
       max-width: 420px;
       padding: 14px;
-      font-size: 20px;
+      font-size: 22px;
       border: 1px solid #ccc;
       border-radius: 10px;
       text-align: center;
@@ -52,10 +56,6 @@
       font-size: 20px;
       border-radius: 10px;
       cursor: pointer;
-    }
-
-    button:hover {
-      background: #5f3d13;
     }
 
     .preview {
@@ -76,29 +76,71 @@
 
 <body>
   <div class="container">
-    <h1>بطاقة المعايدة</h1>
-    <p>اكتب اسمك ثم اضغط على زر تحميل البطاقة.</p>
+
+    <div class="language">
+      <label>
+        <input type="radio" name="lang" value="ar" checked onchange="changeLang()">
+        العربية
+      </label>
+
+      <label>
+        <input type="radio" name="lang" value="en" onchange="changeLang()">
+        English
+      </label>
+    </div>
+
+    <h1 id="title">بطاقة المعايدة</h1>
+    <p id="desc">اكتب اسمك ثم اضغط على زر تحميل البطاقة.</p>
 
     <input type="text" id="empName" placeholder="اكتب الاسم هنا" />
 
     <br />
 
-    <button onclick="downloadCard()">تحميل البطاقة</button>
+    <button id="downloadBtn" onclick="downloadCard()">تحميل البطاقة</button>
 
     <div class="preview">
-      <p>معاينة البطاقة:</p>
-      <img src="card.jpg" alt="بطاقة المعايدة" />
+      <p id="previewText">معاينة البطاقة:</p>
+      <img src="card.jpg" alt="Greeting Card" />
     </div>
   </div>
 
   <canvas id="canvas"></canvas>
 
   <script>
+    function getSelectedLang() {
+      return document.querySelector('input[name="lang"]:checked').value;
+    }
+
+    function changeLang() {
+      const lang = getSelectedLang();
+
+      if (lang === "ar") {
+        document.documentElement.lang = "ar";
+        document.documentElement.dir = "rtl";
+
+        document.getElementById("title").innerText = "بطاقة المعايدة";
+        document.getElementById("desc").innerText = "اكتب اسمك ثم اضغط على زر تحميل البطاقة.";
+        document.getElementById("empName").placeholder = "اكتب الاسم هنا";
+        document.getElementById("downloadBtn").innerText = "تحميل البطاقة";
+        document.getElementById("previewText").innerText = "معاينة البطاقة:";
+      } else {
+        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr";
+
+        document.getElementById("title").innerText = "Greeting Card";
+        document.getElementById("desc").innerText = "Enter your name, then click download.";
+        document.getElementById("empName").placeholder = "Enter your name here";
+        document.getElementById("downloadBtn").innerText = "Download Card";
+        document.getElementById("previewText").innerText = "Card Preview:";
+      }
+    }
+
     function downloadCard() {
       const name = document.getElementById("empName").value.trim();
+      const lang = getSelectedLang();
 
       if (!name) {
-        alert("يرجى كتابة الاسم أولاً");
+        alert(lang === "ar" ? "يرجى كتابة الاسم أولاً" : "Please enter your name first");
         return;
       }
 
@@ -114,18 +156,16 @@
 
         ctx.drawImage(img, 0, 0);
 
-// إعدادات الاسم
-ctx.font = "bold 62px Arial";
-ctx.fillStyle = "#FFFFFF";   // اللون أبيض
-ctx.textAlign = "center";
-ctx.textBaseline = "middle";
-ctx.direction = "ltr";
+        ctx.font = "bold 62px Arial";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.direction = lang === "ar" ? "rtl" : "ltr";
 
-// مكان الاسم أسفل البطاقة
-const textX = canvas.width / 2;
-const textY = canvas.height - 120;
+        const textX = canvas.width / 2;
+        const textY = canvas.height - 120;
 
-ctx.fillText(name, textX, textY);
+        ctx.fillText(name, textX, textY);
 
         const link = document.createElement("a");
         link.download = "Greeting-Card-" + name + ".png";
@@ -134,7 +174,7 @@ ctx.fillText(name, textX, textY);
       };
 
       img.onerror = function () {
-        alert("لم يتم العثور على صورة البطاقة card.jpg");
+        alert("Image not found: card.jpg");
       };
     }
   </script>
