@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بطاقة المعايدة</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f6f2ea;
+      color: #222;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #7a4f18;
+    }
+
+    p {
+      color: #555;
+      font-size: 17px;
+    }
+
+    input {
+      width: 90%;
+      max-width: 420px;
+      padding: 14px;
+      font-size: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    button {
+      background: #7a4f18;
+      color: white;
+      border: none;
+      padding: 14px 35px;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5f3d13;
+    }
+
+    .preview {
+      margin-top: 25px;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+    }
+
+    canvas {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>بطاقة المعايدة</h1>
+    <p>اكتب اسمك ثم اضغط على زر تحميل البطاقة.</p>
+
+    <input type="text" id="empName" placeholder="اكتب الاسم هنا" />
+
+    <br />
+
+    <button onclick="downloadCard()">تحميل البطاقة</button>
+
+    <div class="preview">
+      <p>معاينة البطاقة:</p>
+      <img src="card.jpg" alt="بطاقة المعايدة" />
+    </div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    function downloadCard() {
+      const name = document.getElementById("empName").value.trim();
+
+      if (!name) {
+        alert("يرجى كتابة الاسم أولاً");
+        return;
+      }
+
+      const img = new Image();
+      img.src = "card.png";
+
+      img.onload = function () {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+
+        // إعدادات الاسم
+        ctx.font = "bold 62px Arial";
+        ctx.fillStyle = "#7a4f18";
+        ctx.textAlign = "center";
+        ctx.direction = "rtl";
+
+        // مكان الاسم على البطاقة
+        // يمكنك تعديل الرقم 580 لرفع أو تنزيل الاسم
+        ctx.fillText(name, canvas.width / 2, 580);
+
+        const link = document.createElement("a");
+        link.download = "Greeting-Card-" + name + ".png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      };
+
+      img.onerror = function () {
+        alert("لم يتم العثور على صورة البطاقة card.png");
+      };
+    }
+  </script>
+</body>
+</html>
