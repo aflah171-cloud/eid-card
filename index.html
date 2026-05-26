@@ -114,15 +114,18 @@
 
         ctx.drawImage(img, 0, 0);
 
-        // إعدادات الاسم
-        ctx.font = "bold 62px Arial";
-        ctx.fillStyle = "#7a4f18";
-        ctx.textAlign = "center";
-        ctx.direction = "rtl";
+// إعدادات الاسم
+ctx.font = "bold 62px Arial";
+ctx.fillStyle = "#FFFFFF";   // اللون أبيض
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.direction = "ltr";
 
-        // مكان الاسم على البطاقة
-        // يمكنك تعديل الرقم 580 لرفع أو تنزيل الاسم
-        ctx.fillText(name, canvas.width / 2, 580);
+// مكان الاسم أسفل البطاقة
+const textX = canvas.width / 2;
+const textY = canvas.height - 120;
+
+ctx.fillText(name, textX, textY);
 
         const link = document.createElement("a");
         link.download = "Greeting-Card-" + name + ".png";
