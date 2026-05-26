@@ -3,28 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Greeting Card</title>
+  <title>Eid Al-Adha Greeting Card</title>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, Tahoma, sans-serif;
-      background: #f6f2ea;
-      color: #222;
+      background: linear-gradient(135deg, #f6f2ea, #fffaf2);
+      color: #2b2117;
       text-align: center;
     }
 
     .container {
-      max-width: 900px;
-      margin: 40px auto;
+      max-width: 950px;
+      margin: 35px auto;
       background: #ffffff;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-    }
-
-    h1 {
-      color: #7a4f18;
+      padding: 35px;
+      border-radius: 22px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+      border: 1px solid #ead8bd;
     }
 
     .language {
@@ -33,39 +30,86 @@
     }
 
     .language label {
-      margin: 0 10px;
+      margin: 0 12px;
       cursor: pointer;
+    }
+
+    .icon {
+      font-size: 46px;
+      color: #9a681f;
+      margin-bottom: 5px;
+    }
+
+    h1 {
+      color: #7a4f18;
+      font-size: 42px;
+      margin: 10px 0 5px;
+    }
+
+    .subtitle {
+      color: #9a681f;
+      font-size: 26px;
+      margin: 0 0 10px;
+      font-style: italic;
+    }
+
+    p {
+      font-size: 18px;
+      color: #4d4033;
     }
 
     input[type="text"] {
       width: 90%;
-      max-width: 420px;
-      padding: 14px;
-      font-size: 22px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      max-width: 500px;
+      padding: 15px;
+      font-size: 24px;
+      border: 1px solid #cfc7bc;
+      border-radius: 12px;
       text-align: center;
       margin: 15px 0;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.04);
     }
 
     button {
-      background: #7a4f18;
+      background: linear-gradient(135deg, #8a5a18, #6f430e);
       color: white;
       border: none;
-      padding: 14px 35px;
-      font-size: 20px;
-      border-radius: 10px;
+      padding: 15px 45px;
+      font-size: 22px;
+      border-radius: 12px;
       cursor: pointer;
+      box-shadow: 0 5px 14px rgba(111,67,14,0.25);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #6f430e, #573307);
+    }
+
+    .divider {
+      margin: 30px auto 15px;
+      width: 80%;
+      border-top: 1px solid #ead8bd;
+      position: relative;
+    }
+
+    .divider span {
+      background: #ffffff;
+      padding: 0 12px;
+      position: relative;
+      top: -13px;
+      color: #9a681f;
+      font-size: 22px;
     }
 
     .preview {
-      margin-top: 25px;
+      margin-top: 10px;
     }
 
     .preview img {
       max-width: 100%;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid #ddd;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     }
 
     canvas {
@@ -89,7 +133,11 @@
       </label>
     </div>
 
-    <h1 id="title">بطاقة المعايدة</h1>
+    <div class="icon">☾ ✦</div>
+
+    <h1 id="title">بطاقة تهنئة عيد الأضحى</h1>
+    <p class="subtitle" id="subtitle">Eid Al-Adha Mubarak</p>
+
     <p id="desc">اكتب اسمك ثم اضغط على زر تحميل البطاقة.</p>
 
     <input type="text" id="empName" placeholder="اكتب الاسم هنا" />
@@ -98,9 +146,13 @@
 
     <button id="downloadBtn" onclick="downloadCard()">تحميل البطاقة</button>
 
+    <div class="divider">
+      <span>✦</span>
+    </div>
+
     <div class="preview">
       <p id="previewText">معاينة البطاقة:</p>
-      <img src="card.jpg" alt="Greeting Card" />
+      <img src="card.jpg" alt="Eid Al-Adha Greeting Card" />
     </div>
   </div>
 
@@ -118,7 +170,8 @@
         document.documentElement.lang = "ar";
         document.documentElement.dir = "rtl";
 
-        document.getElementById("title").innerText = "بطاقة المعايدة";
+        document.getElementById("title").innerText = "بطاقة تهنئة عيد الأضحى";
+        document.getElementById("subtitle").innerText = "عيد أضحى مبارك";
         document.getElementById("desc").innerText = "اكتب اسمك ثم اضغط على زر تحميل البطاقة.";
         document.getElementById("empName").placeholder = "اكتب الاسم هنا";
         document.getElementById("downloadBtn").innerText = "تحميل البطاقة";
@@ -127,7 +180,8 @@
         document.documentElement.lang = "en";
         document.documentElement.dir = "ltr";
 
-        document.getElementById("title").innerText = "Greeting Card";
+        document.getElementById("title").innerText = "Eid Al-Adha Greeting Card";
+        document.getElementById("subtitle").innerText = "Eid Al-Adha Mubarak";
         document.getElementById("desc").innerText = "Enter your name, then click download.";
         document.getElementById("empName").placeholder = "Enter your name here";
         document.getElementById("downloadBtn").innerText = "Download Card";
@@ -168,7 +222,7 @@
         ctx.fillText(name, textX, textY);
 
         const link = document.createElement("a");
-        link.download = "Greeting-Card-" + name + ".png";
+        link.download = "Eid-Al-Adha-Card-" + name + ".png";
         link.href = canvas.toDataURL("image/png");
         link.click();
       };
