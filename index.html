@@ -37,7 +37,6 @@
     .icon {
       font-size: 46px;
       color: #9a681f;
-      margin-bottom: 5px;
     }
 
     h1 {
@@ -67,7 +66,6 @@
       border-radius: 12px;
       text-align: center;
       margin: 15px 0;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.04);
     }
 
     button {
@@ -78,38 +76,24 @@
       font-size: 22px;
       border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 5px 14px rgba(111,67,14,0.25);
     }
 
-    button:hover {
-      background: linear-gradient(135deg, #6f430e, #573307);
+    #counterText {
+      margin-top: 18px;
+      font-weight: bold;
+      color: #7a4f18;
     }
 
     .divider {
       margin: 30px auto 15px;
       width: 80%;
       border-top: 1px solid #ead8bd;
-      position: relative;
-    }
-
-    .divider span {
-      background: #ffffff;
-      padding: 0 12px;
-      position: relative;
-      top: -13px;
-      color: #9a681f;
-      font-size: 22px;
-    }
-
-    .preview {
-      margin-top: 10px;
     }
 
     .preview img {
       max-width: 100%;
       border-radius: 14px;
       border: 1px solid #ddd;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     }
 
     canvas {
@@ -133,11 +117,10 @@
       </label>
     </div>
 
-    <div class="icon">☾ ✦</div>
+    <div class="icon">☾ </div>
 
     <h1 id="title">بطاقة تهنئة عيد الأضحى</h1>
-    <p class="subtitle" id="subtitle">Eid Al-Adha Mubarak</p>
-
+    <p class="subtitle" id="subtitle">عيد أضحى مبارك</p>
     <p id="desc">اكتب اسمك ثم اضغط على زر تحميل البطاقة.</p>
 
     <input type="text" id="empName" placeholder="اكتب الاسم هنا" />
@@ -146,9 +129,9 @@
 
     <button id="downloadBtn" onclick="downloadCard()">تحميل البطاقة</button>
 
-    <div class="divider">
-      <span>✦</span>
-    </div>
+    <p id="counterText">عدد البطاقات التي تم إنشاؤها: 0</p>
+
+    <div class="divider"></div>
 
     <div class="preview">
       <p id="previewText">معاينة البطاقة:</p>
@@ -161,6 +144,16 @@
   <script>
     function getSelectedLang() {
       return document.querySelector('input[name="lang"]:checked').value;
+    }
+
+    function updateCounterText() {
+      const lang = getSelectedLang();
+      const count = localStorage.getItem("cardCount") || 0;
+
+      document.getElementById("counterText").innerText =
+        lang === "ar"
+          ? "عدد البطاقات التي تم إنشاؤها: " + count
+          : "Cards generated: " + count;
     }
 
     function changeLang() {
@@ -187,6 +180,8 @@
         document.getElementById("downloadBtn").innerText = "Download Card";
         document.getElementById("previewText").innerText = "Card Preview:";
       }
+
+      updateCounterText();
     }
 
     function downloadCard() {
@@ -221,6 +216,11 @@
 
         ctx.fillText(name, textX, textY);
 
+        let count = Number(localStorage.getItem("cardCount") || 0);
+        count++;
+        localStorage.setItem("cardCount", count);
+        updateCounterText();
+
         const link = document.createElement("a");
         link.download = "Eid-Al-Adha-Card-" + name + ".png";
         link.href = canvas.toDataURL("image/png");
@@ -231,6 +231,10 @@
         alert("Image not found: card.jpg");
       };
     }
+
+    window.onload = function () {
+      updateCounterText();
+    };
   </script>
 </body>
 </html>
