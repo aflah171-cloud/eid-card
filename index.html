@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Eid Al-Adha Greeting Card</title>
 
   <style>
     body {
       margin: 0;
       font-family: Arial, Tahoma, sans-serif;
-      background: linear-gradient(135deg, #f6f2ea, #fffaf2);
-      color: #2b2117;
+      background: linear-gradient(135deg, #f7f3eb, #fffdf9);
       text-align: center;
+      color: #2d2218;
     }
 
     .container {
@@ -20,7 +22,7 @@
       background: #ffffff;
       padding: 35px;
       border-radius: 22px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
       border: 1px solid #ead8bd;
     }
 
@@ -37,6 +39,7 @@
     .icon {
       font-size: 46px;
       color: #9a681f;
+      margin-bottom: 8px;
     }
 
     h1 {
@@ -46,15 +49,15 @@
     }
 
     .subtitle {
-      color: #9a681f;
-      font-size: 26px;
-      margin: 0 0 10px;
+      color: #b3833d;
+      font-size: 28px;
+      margin-bottom: 10px;
       font-style: italic;
     }
 
     p {
-      font-size: 18px;
       color: #4d4033;
+      font-size: 18px;
     }
 
     input[type="text"] {
@@ -62,7 +65,7 @@
       max-width: 500px;
       padding: 15px;
       font-size: 24px;
-      border: 1px solid #cfc7bc;
+      border: 1px solid #d9d1c7;
       border-radius: 12px;
       text-align: center;
       margin: 15px 0;
@@ -76,12 +79,18 @@
       font-size: 22px;
       border-radius: 12px;
       cursor: pointer;
+      box-shadow: 0 5px 14px rgba(111, 67, 14, 0.25);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #6f430e, #573307);
     }
 
     #counterText {
-      margin-top: 18px;
+      margin-top: 20px;
       font-weight: bold;
       color: #7a4f18;
+      font-size: 20px;
     }
 
     .divider {
@@ -94,6 +103,7 @@
       max-width: 100%;
       border-radius: 14px;
       border: 1px solid #ddd;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     }
 
     canvas {
@@ -103,6 +113,7 @@
 </head>
 
 <body>
+
   <div class="container">
 
     <div class="language">
@@ -117,86 +128,152 @@
       </label>
     </div>
 
-    <div class="icon">☾ </div>
+    <div class="icon">☾ ✦</div>
 
     <h1 id="title">بطاقة تهنئة عيد الأضحى</h1>
-    <p class="subtitle" id="subtitle">عيد أضحى مبارك</p>
-    <p id="desc">اكتب اسمك ثم اضغط على زر تحميل البطاقة.</p>
 
-    <input type="text" id="empName" placeholder="اكتب الاسم هنا" />
+    <div class="subtitle" id="subtitle">
+      Eid Al-Adha Mubarak
+    </div>
 
-    <br />
+    <p id="desc">
+      اكتب اسمك ثم اضغط على زر تحميل البطاقة
+    </p>
 
-    <button id="downloadBtn" onclick="downloadCard()">تحميل البطاقة</button>
+    <input type="text" id="empName" placeholder="اكتب الاسم هنا">
 
-    <p id="counterText">عدد البطاقات التي تم إنشاؤها: 0</p>
+    <br>
+
+    <button id="downloadBtn" onclick="downloadCard()">
+      تحميل البطاقة
+    </button>
+
+    <p id="counterText">
+      عدد البطاقات التي تم إنشاؤها: 0
+    </p>
 
     <div class="divider"></div>
 
     <div class="preview">
       <p id="previewText">معاينة البطاقة:</p>
-      <img src="card.jpg" alt="Eid Al-Adha Greeting Card" />
+
+      <img src="card.jpg" alt="Eid Card">
     </div>
+
   </div>
 
   <canvas id="canvas"></canvas>
 
   <script>
+
+    const GOOGLE_SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbzxKnKEARiPynX6TcYxMQ6lK0dXCeLMZ2o0oajsaUfHmgwcN8I7_3hw0VH2FL-YND4tIQ/exec";
+
     function getSelectedLang() {
       return document.querySelector('input[name="lang"]:checked').value;
     }
 
-    function updateCounterText() {
-      const lang = getSelectedLang();
-      const count = localStorage.getItem("cardCount") || 0;
+    async function updateCounter() {
 
-      document.getElementById("counterText").innerText =
-        lang === "ar"
-          ? "عدد البطاقات التي تم إنشاؤها: " + count
-          : "Cards generated: " + count;
+      try {
+
+        const response = await fetch(GOOGLE_SCRIPT_URL);
+        const data = await response.json();
+
+        const lang = getSelectedLang();
+
+        document.getElementById("counterText").innerText =
+          lang === "ar"
+            ? "عدد البطاقات التي تم إنشاؤها: " + data.count
+            : "Cards generated: " + data.count;
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
     }
 
     function changeLang() {
+
       const lang = getSelectedLang();
 
       if (lang === "ar") {
+
         document.documentElement.lang = "ar";
         document.documentElement.dir = "rtl";
 
-        document.getElementById("title").innerText = "بطاقة تهنئة عيد الأضحى";
-        document.getElementById("subtitle").innerText = "عيد أضحى مبارك";
-        document.getElementById("desc").innerText = "اكتب اسمك ثم اضغط على زر تحميل البطاقة.";
-        document.getElementById("empName").placeholder = "اكتب الاسم هنا";
-        document.getElementById("downloadBtn").innerText = "تحميل البطاقة";
-        document.getElementById("previewText").innerText = "معاينة البطاقة:";
+        document.getElementById("title").innerText =
+          "بطاقة تهنئة عيد الأضحى";
+
+        document.getElementById("subtitle").innerText =
+          "عيد أضحى مبارك";
+
+        document.getElementById("desc").innerText =
+          "اكتب اسمك ثم اضغط على زر تحميل البطاقة";
+
+        document.getElementById("empName").placeholder =
+          "اكتب الاسم هنا";
+
+        document.getElementById("downloadBtn").innerText =
+          "تحميل البطاقة";
+
+        document.getElementById("previewText").innerText =
+          "معاينة البطاقة:";
+
       } else {
+
         document.documentElement.lang = "en";
         document.documentElement.dir = "ltr";
 
-        document.getElementById("title").innerText = "Eid Al-Adha Greeting Card";
-        document.getElementById("subtitle").innerText = "Eid Al-Adha Mubarak";
-        document.getElementById("desc").innerText = "Enter your name, then click download.";
-        document.getElementById("empName").placeholder = "Enter your name here";
-        document.getElementById("downloadBtn").innerText = "Download Card";
-        document.getElementById("previewText").innerText = "Card Preview:";
+        document.getElementById("title").innerText =
+          "Eid Al-Adha Greeting Card";
+
+        document.getElementById("subtitle").innerText =
+          "Eid Al-Adha Mubarak";
+
+        document.getElementById("desc").innerText =
+          "Enter your name then click download";
+
+        document.getElementById("empName").placeholder =
+          "Enter your name here";
+
+        document.getElementById("downloadBtn").innerText =
+          "Download Card";
+
+        document.getElementById("previewText").innerText =
+          "Card Preview:";
+
       }
 
-      updateCounterText();
+      updateCounter();
+
     }
 
-    function downloadCard() {
+    async function downloadCard() {
+
       const name = document.getElementById("empName").value.trim();
       const lang = getSelectedLang();
 
       if (!name) {
-        alert(lang === "ar" ? "يرجى كتابة الاسم أولاً" : "Please enter your name first");
+
+        alert(
+          lang === "ar"
+            ? "يرجى كتابة الاسم أولاً"
+            : "Please enter your name first"
+        );
+
         return;
+
       }
 
       const img = new Image();
+
       img.src = "card.jpg";
 
-      img.onload = function () {
+      img.onload = async function () {
+
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
 
@@ -209,32 +286,56 @@
         ctx.fillStyle = "#FFFFFF";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.direction = lang === "ar" ? "rtl" : "ltr";
+
+        ctx.direction =
+          lang === "ar" ? "rtl" : "ltr";
 
         const textX = canvas.width / 2;
         const textY = canvas.height - 120;
 
         ctx.fillText(name, textX, textY);
 
-        let count = Number(localStorage.getItem("cardCount") || 0);
-        count++;
-        localStorage.setItem("cardCount", count);
-        updateCounterText();
+        await fetch(GOOGLE_SCRIPT_URL, {
+
+          method: "POST",
+
+          body: JSON.stringify({
+            name: name,
+            language: lang
+          })
+
+        });
+
+        updateCounter();
 
         const link = document.createElement("a");
-        link.download = "Eid-Al-Adha-Card-" + name + ".png";
-        link.href = canvas.toDataURL("image/png");
+
+        link.download =
+          "Eid-Al-Adha-Card-" + name + ".png";
+
+        link.href =
+          canvas.toDataURL("image/png");
+
         link.click();
+
       };
 
       img.onerror = function () {
+
         alert("Image not found: card.jpg");
+
       };
+
     }
 
     window.onload = function () {
-      updateCounterText();
+
+      updateCounter();
+
     };
+
   </script>
+
 </body>
+
 </html>
